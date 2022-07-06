@@ -1,17 +1,48 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import { createGlobalStyle } from "styled-components";
+import { App } from "./components/App";
+import store from "./redux/store";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const Global = createGlobalStyle`
+* {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+img {
+  max-width: 1064px;
+}
+
+pre {
+  background-color: #363636;
+  display: block;
+  color: white;
+  margin: 20px 0;
+  padding: 15px;
+  overflow: auto;
+}
+
+code:not(pre code) {
+  background-color: hsl(210deg 4% 89%);
+  display: inline-block;
+  padding: 2px 4px 2px 4px;
+  
+  border-radius: 7px;;
+}
+`
+
+ReactDOM.render(
+    <Provider store={store}>
+        <Router>
+            <Global/>
+            <App />
+        </Router>
+    </Provider>,
+    document.getElementById("root")
+)
+
