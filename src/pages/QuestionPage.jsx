@@ -14,6 +14,9 @@ const Author = styled.h1`
     display: block;
     text-align: center;
 `
+const Wrapper = styled.div`
+    width: 100%;
+`
 
 const TagsContainer = styled.div`
 margin-top: 20px;
@@ -29,13 +32,12 @@ background-color: gray;
   padding: 4px;
 margin-right: 20px;
 `
-const Wrapper = styled.div`
+const QuestionWrapper = styled.div`
 margin-top: 50px;
 border-radius: 15px;
 background-color: #BECCCD;
 padding: 20px;
 margin-bottom: 50px;
-width: 1104px;
 
 `
 const Title = styled.h2`
@@ -58,10 +60,9 @@ export const QuestionPage = () => {
     }, [id])
 
   let key = 0
+  let key2 = 0
 if (question) {
-
-    console.log(question)
-    return<> <Wrapper>
+    return<Wrapper> <QuestionWrapper>
     
     <Author>{question.owner.display_name}</Author>
     <TagsContainer>{
@@ -75,15 +76,15 @@ if (question) {
     <h2>Comments:</h2>
     <div>{question.comments?.map((item) => {
         return (
-            <Comment>
+            <Comment key={key2++}>
             <h3>{item.owner.display_name}</h3>
             <div>{parse(DOMPurify.sanitize(item.body))}</div>
             </Comment>
         )
     })}</div>
-    </Wrapper>
+    </QuestionWrapper>
     <AnswersList/>
-    </>
+    </Wrapper>
 }
 return null
 }

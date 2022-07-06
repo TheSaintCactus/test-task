@@ -13,8 +13,8 @@ margin-top: 50px;
 border-radius: 15px;
 background-color: #BECCCD;
 padding: 20px;
-width: 1104px;
-
+margin-bottom: 50px;
+max-width: 1200px;
 `
 const Title = styled.h2`
 text-align: center;

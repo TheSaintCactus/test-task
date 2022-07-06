@@ -10,6 +10,7 @@ border: 1px solid #81d1ff;
   justify-items: center;
   min-height: 50px;
   margin-bottom: -1px;
+  width: 100%;
   &:hover {
     background-color: #81d1ff;
 

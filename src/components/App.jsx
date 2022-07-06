@@ -9,18 +9,20 @@ import { QuestionPage } from '../pages/QuestionPage';
 
 
 const AppContainer = styled.div`
-width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  margin: 0 auto;
+  width: 99%;
+  max-width: 1200px;
 `
 
 const Wrapper = styled.div`
 display: flex;
   flex-direction: column;
   align-items: center;
-  width: 1104px;
+  width: 100%;
 `
 
 export const App = () => {

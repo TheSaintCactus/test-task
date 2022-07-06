@@ -13,7 +13,7 @@ display: block;
 
 export const QuestionCellContainer = styled.div`
   display: grid;
-  grid-template-columns: 250px 500px 150px 200px;
+  grid-template-columns: 22.64% 45.29% 13.59% 18.12%;
   box-sizing: border-box;
   gap: 1px;
   background-color: white;

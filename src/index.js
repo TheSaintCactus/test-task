@@ -14,8 +14,13 @@ const Global = createGlobalStyle`
   padding: 0px;
 }
 
+
+
+#root {
+}
+
 img {
-  max-width: 1064px;
+  max-width: 100%;
 }
 
 pre {
@@ -24,6 +29,7 @@ pre {
   color: white;
   margin: 20px 0;
   padding: 15px;
+  max-width: 100%;
   overflow: auto;
 }
 
