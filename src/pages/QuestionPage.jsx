@@ -1,8 +1,8 @@
-import { decode } from "html-entities";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { getQuestion, setQuestion } from "../redux/actions";
+import { getQuestion } from "../redux/actions";
 import { state } from "../redux/selectors";
 import parse from 'html-react-parser';
 import styled from "styled-components";
@@ -52,7 +52,7 @@ border-top: 1px solid gray;
 export const QuestionPage = () => {
     const dispatch = useDispatch()
     const { id } = useParams();
-    const { question, questions } = useSelector(state)
+    const { question } = useSelector(state)
     useEffect(() => {
         dispatch(getQuestion(id))
     }, [id])

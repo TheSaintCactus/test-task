@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux"
 import styled from "styled-components"
-import { getQuestions, loadingEnd, setSearchQuery } from "../../redux/actions"
-
+import { getQuestions, setSearchQuery } from "../../redux/actions"
 const FormStyled = styled.form`
 margin-top: 10px;
 width: 100%;

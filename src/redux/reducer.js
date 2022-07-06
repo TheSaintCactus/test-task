@@ -1,4 +1,3 @@
-import { act } from "react-dom/test-utils";
 import {
   errorCatchType,
   loadingEndType,
@@ -7,7 +6,6 @@ import {
   setQuestionType,
   clearQuestionStateType,
   setAnswersType,
-  setSearchQuery,
   setSearchQueryType,
 } from "./action-types";
 

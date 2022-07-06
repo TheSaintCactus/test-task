@@ -8,20 +8,6 @@ margin-top: 20px;
 display: block;
 `
 
-const TagsContainer = styled.div`
-margin-top: 20px;
-display: flex;
-justify-content: center;
-`
-const Tag = styled.div`
-background-color: gray;
-display: inline-block;
-border-radius: 8px;
-margin-bottom: 5px;
-color: white;
-padding: 4px;
-margin-right: 20px;
-`
 const Wrapper = styled.div`
 margin-top: 50px;
 border-radius: 15px;

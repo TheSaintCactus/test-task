@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router";
@@ -17,7 +18,7 @@ export const AnswersList = () => {
 
 useEffect(() => {
     dispatch(getAnswers(id))
-}, [])
+}, [id])
 let key = 0;
 
 if (answers && Array.isArray(answers)) {
