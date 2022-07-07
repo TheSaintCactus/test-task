@@ -62,7 +62,6 @@ const SortButtons = () => {
   };
 
   useEffect(() => {
-    console.log(method, direction);
     if (firstRenderRef.current) {
       firstRenderRef.current = false;
     } else {

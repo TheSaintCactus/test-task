@@ -22,8 +22,7 @@ export const reducer = (state = initialState, action) => {
 
       return {
         ...state,
-        questions: action.payload.items,
-        total: action.payload.total,
+        questions: action.payload,
       };
     case setQuestionType:
       return {

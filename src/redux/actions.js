@@ -36,7 +36,7 @@ export const getQuestions = (query, method = 'activity', order = 'desc') => asyn
     dispatch(loadingStart())
     axios.get(`${apiUrl}search/advanced?key=${apiKey}&q=${query}&page=1&order=${order}&sort=${method}&site=stackoverflow&filter=!ak79D-_Fo1F9X4`)
     .then(function (response) {
-      dispatch(setQuestionsArray(response.data))
+      dispatch(setQuestionsArray(response.data.items))
       dispatch(loadingEnd())
     })
     .catch(function (error) {
