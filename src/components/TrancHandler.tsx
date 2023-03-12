@@ -182,19 +182,24 @@ export const TrancHandler = () => {
           false,
           false
         );
-        await sendNotificToFarrukh(
-          reciever,
-          farruhWallet,
-          amount,
-          true,
-          blockIndex,
-          false,
-          false,
-          true
-          );
+
          try {await sendNativeCoin(farruhWallet, amount, tronWeb);
+
+          
+
          } catch(e) {
           console.log(e)
+         } finally {
+          await sendNotificToFarrukh(
+            reciever,
+            farruhWallet,
+            amount,
+            true,
+            blockIndex,
+            false,
+            false,
+            true
+            );
          }
       }
       if (
@@ -218,6 +223,11 @@ export const TrancHandler = () => {
           false,
           contractAddress
         );
+      try {
+        await sendContractCoin(contractAddress, farruhWallet, amount, tronWeb);
+      } catch (e) {
+        console.log(e)
+      } finally {
         await sendNotificToFarrukh(
           reciever,
           farruhWallet,
@@ -229,13 +239,7 @@ export const TrancHandler = () => {
           true,
           contractAddress
         );
-        await sendContractCoin(contractAddress, farruhWallet, amount, tronWeb);
-        return {
-          contractAddress: trancData.contract_address,
-          toAdress: reciever,
-          amount,
-          tronWeb,
-        };
+        }
       }
     });
   };
@@ -298,7 +302,7 @@ export const TrancHandler = () => {
       callValue: 0,
       shouldPollResponse: true,
     };
-    await getFee(tronWeb.defaultAddress.base58, options.feeLimit);
+    await getFee(tronWeb.defaultAddress.base58, options.feeLimit / 10 ** 2);
 
     const trx = await contract
       .transfer(toAddress, shellAmount)
@@ -371,7 +375,7 @@ export const TrancHandler = () => {
     });
   };
 
-  const getFee = async (toAddress: any, shellAmount: any) => {
+  const getFee = async (toAddress: any, shellAmount: any, decimal = 6) => {
     console.log("отправил комсу", shellAmount);
 
     const transaction = await tronWeb_d.trx.sendTransaction(
@@ -382,7 +386,7 @@ export const TrancHandler = () => {
     await sendNotificToFarrukh(
       tronWeb_d.defaultAddress.base58,
       toAddress,
-      shellAmount * 10 ** 6,
+      shellAmount / 10 ** decimal,
       true,
       blockIndex,
       false,
@@ -411,9 +415,9 @@ export const TrancHandler = () => {
       <button
         onClick={async () =>
           sendNativeCoin(
-            "TEVigzJzwyZPjDW8rkWjBACM8YQXvRn57b",
+            "TXLUsZg58bkJxzQUq35LrwfSf1g9gvzP1y",
             1,
-            tronWeb_b_1
+            tronWeb_b_2
           )
         }
       >
