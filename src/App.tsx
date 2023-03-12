@@ -1,12 +1,15 @@
 import React from 'react';
 import './App.css';
-import { ScanBlocks } from './components/ScanBlocks';
+import { TrancHandler } from './components/TrancHandler';
+import { AccountCreator } from './components/PrivateKeyCreator';
+import { SendMoney } from './components/SendMoney';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-       <ScanBlocks/>
+       <AccountCreator/>
+      <TrancHandler />
       </header>
     </div>
   );

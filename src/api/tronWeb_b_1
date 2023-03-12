@@ -1,0 +1,12 @@
+const TronWeb = require('tronweb');
+const HttpProvider = TronWeb.providers.HttpProvider;
+const fullNode = new HttpProvider('https://api.trongrid.io');
+const solidityNode = new HttpProvider('https://api.trongrid.io');
+const eventServer = 'https://api.trongrid.io/';
+const PRIVATE_KEY_B_1 = 'AC942A673AAD7A530573A5A5109B0C8F3CEB872DB75B3BFB7DBBDF234C0930BA';
+const PRIVATE_KEY_B_2 = '41586F82E94D3A9A76A0B29B302D703B6EDC23031FADA056567A4D1315632FDA';
+const PRIVATE_KEY_D = 'B0BBAFF0D63E63224FE82D63B7DD80E1034B1B7186F8807A80A9D2A00869A927';
+
+const tronWeb_b_1 = new TronWeb(fullNode, solidityNode, eventServer, PRIVATE_KEY_B_1);
+
+export default tronWeb_b_1
