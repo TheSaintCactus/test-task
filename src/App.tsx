@@ -1,15 +1,12 @@
-import React from 'react';
-import './App.css';
-import { TrancHandler } from './components/TrancHandler';
-import { AccountCreator } from './components/PrivateKeyCreator';
-import { SendMoney } from './components/SendMoney';
+import React from "react";
+import "./App.css";
+import { AccountCreator } from "./components/PrivateKeyCreator";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-       <AccountCreator/>
-      <TrancHandler />
+        <AccountCreator />
       </header>
     </div>
   );

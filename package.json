@@ -70,6 +70,7 @@
     ]
   },
   "devDependencies": {
-    "tronweb-typings": "^1.0.1"
+    "tronweb-typings": "^1.0.1",
+    "worker-loader": "^3.0.8"
   }
 }
